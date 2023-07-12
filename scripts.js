@@ -68,11 +68,6 @@ request.onreadystatechange = function () {
                     } else if (wordListArray.includes(guessedWord.join(""))) {
                         amountOfGuesses++;
                         // Check letters and reset guess
-                        wordGrid.classList.add("shake-horizontal");
-                        window.setTimeout(() => {
-                            wordGrid.classList.remove("shake-horizontal");
-                        }, 600);
-
 
                         guessedWord.map((value, index) => {
 
@@ -84,13 +79,14 @@ request.onreadystatechange = function () {
                                 // In correct place? 
                                 if (wordToGuess.indexOf(value) === index) {
                                     currentTile.classList.add("correct");
+                                    currentTile.classList.add("flip");
                                     // Check key is already set the class
                                     if (!currentKey.classList.contains("correct")) {
                                         currentKey.classList.add("correct");
-                                        currentKey.classList.add("pulse-out");
                                     }
                                 } else {
                                     currentTile.classList.add("wrong_place");
+                                    currentTile.classList.add("flip");
                                     if (!currentKey.classList.contains("wrong_place")) {
                                         currentKey.classList.add("wrong_place");
                                     }
@@ -98,6 +94,7 @@ request.onreadystatechange = function () {
                             } else {
 
                                 currentTile.classList.add("wrong");
+                                currentTile.classList.add("flip");
                                 if (!currentKey.classList.contains("wrong")) {
                                     currentKey.classList.add("wrong");
                                 }
@@ -114,6 +111,12 @@ request.onreadystatechange = function () {
                             endGame();
                         }
                     } else {
+
+                        currentRow.classList.add("shake-horizontal");
+                        window.setTimeout(() => {
+                            currentRow.classList.remove("shake-horizontal");
+                        }, 600);
+
                         console.log("Not a valid word");
                     }
 
