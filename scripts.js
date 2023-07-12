@@ -38,9 +38,9 @@ request.onreadystatechange = function () {
         document.addEventListener("keyup", keyPressed);
 
         function keyPressed(event, referred = false) {
+            if (event.ctrlKey || event.altKey) return;
 
             if (!letterRegex.test(event.key)) return;
-
             // Not allowing words with duplicate letters.. yet?
             if (guessedWord.includes(event.key)) return;
 
@@ -55,8 +55,13 @@ request.onreadystatechange = function () {
 
                         deleteLastLetter();
                         return;
+
                     } else if (event.key === "Enter") {
+
                         submitGuess();
+                        return;
+
+                    } else {
                         return;
                     }
                 }
@@ -64,15 +69,17 @@ request.onreadystatechange = function () {
 
             // Handle letter tiles
             if (currentLetterPosition < 6) {
+
                 currentTile.textContent = event.key.toUpperCase();
                 guessedWord.push(event.key);
                 currentTile.classList.add("guessed");
                 currentLetterPosition++;
+
             }
 
             function submitGuess() {
-                if (currentLetterPosition > 5) {
 
+                if (currentLetterPosition > 5) {
 
                     if (guessedWord.join("") === wordToGuess) {
                         // Word is correct
@@ -82,6 +89,7 @@ request.onreadystatechange = function () {
                         endGame();
 
                     } else if (wordListArray.includes(guessedWord.join(""))) {
+
                         amountOfGuesses++;
                         // Check letters and reset guess
 
@@ -94,16 +102,21 @@ request.onreadystatechange = function () {
 
                                 // In correct place? 
                                 if (wordToGuess.indexOf(value) === index) {
+
                                     currentTile.classList.add("correct");
                                     currentTile.classList.add("flip");
                                     // Check key is already set the class
                                     if (!currentKey.classList.contains("correct")) {
+
                                         currentKey.classList.add("correct");
+
                                     }
                                 } else {
+
                                     currentTile.classList.add("wrong_place");
                                     currentTile.classList.add("flip");
                                     if (!currentKey.classList.contains("wrong_place")) {
+
                                         currentKey.classList.add("wrong_place");
                                     }
                                 }
@@ -112,6 +125,7 @@ request.onreadystatechange = function () {
                                 currentTile.classList.add("wrong");
                                 currentTile.classList.add("flip");
                                 if (!currentKey.classList.contains("wrong")) {
+
                                     currentKey.classList.add("wrong");
                                 }
                             }
