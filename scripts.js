@@ -14,6 +14,7 @@ request.onreadystatechange = function () {
         const randomIndex = Math.floor(Math.random() * wordListArray.length);
         const wordToGuess = wordListArray[randomIndex];
         const wordGrid = document.querySelector(".grid");
+        keyboardMarker.addEventListener("click", handleClick);
 
         let guessedWord = [];
         let currentLetterPosition = 1;
@@ -22,6 +23,11 @@ request.onreadystatechange = function () {
 
         console.log(wordToGuess);
 
+        function handleClick(event) {
+
+            keyPressed({key: event.target.id[0]})
+            
+        }
 
 
         document.addEventListener("keyup", keyPressed);
