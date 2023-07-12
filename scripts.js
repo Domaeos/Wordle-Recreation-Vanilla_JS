@@ -24,44 +24,54 @@ request.onreadystatechange = function () {
         console.log(wordToGuess);
 
         function handleClick(event) {
+            if (event.target.id.startsWith("Del")) {
+                keyPressed({ key: "Backspace" }, false);
+            } else if (event.target.id.startsWith("Enter")) {
+                keyPressed({ key: "Enter" });
+            } else {
+                keyPressed({ key: event.target.id[0] }, true)
+            }
 
-            keyPressed({key: event.target.id[0]})
-            
         }
 
 
         document.addEventListener("keyup", keyPressed);
 
-        function keyPressed(event) {
+        function keyPressed(event, referred = false) {
 
             if (!letterRegex.test(event.key)) return;
 
             // Not allowing words with duplicate letters.. yet?
             if (guessedWord.includes(event.key)) return;
 
-            if (event.key.length > 1) {
-                if (event.key === "Backspace") {
+            const currentTile = document.querySelector(".letterBox:not(.guessed)");
+            const currentRow = document.querySelector(`#row${amountOfGuesses}`);
 
-                    deleteLastLetter();
-                    return;
 
-                } else {
+            // Doesnt need to check for other keys if sent via visual keyboard
+            if (!referred) {
+                if (event.key.length > 1) {
+                    if (event.key === "Backspace") {
 
-                    return;
+                        deleteLastLetter();
+                        return;
+                    } else if (event.key === "Enter") {
+                        submitGuess();
+                        return;
+                    }
                 }
             }
 
-            const currentTile = document.querySelector(".letterBox:not(.guessed)");
-            const currentKey = document.querySelector(`#${event.key}_key`);
-            const currentRow = document.querySelector(`#row${amountOfGuesses}`);
-
             // Handle letter tiles
-            currentTile.textContent = event.key.toUpperCase();
-            guessedWord.push(event.key);
-            currentTile.classList.add("guessed");
-            currentLetterPosition++;
+            if (currentLetterPosition < 6) {
+                currentTile.textContent = event.key.toUpperCase();
+                guessedWord.push(event.key);
+                currentTile.classList.add("guessed");
+                currentLetterPosition++;
+            }
 
-            if (currentLetterPosition > 5) {
+            function submitGuess() {
+                if (currentLetterPosition > 5) {
 
 
                     if (guessedWord.join("") === wordToGuess) {
@@ -116,6 +126,7 @@ request.onreadystatechange = function () {
                             // NO MORE GUESSES
                             endGame();
                         }
+
                     } else {
 
                         currentRow.classList.add("shake-horizontal");
@@ -127,28 +138,29 @@ request.onreadystatechange = function () {
                     }
 
                 }
+            }
 
 
-                function endGame() {
-                    document.removeEventListener("keyup", keyPressed);
+            function endGame() {
+                document.removeEventListener("keyup", keyPressed);
+            }
+
+            function deleteLastLetter() {
+                let currentRow = document.querySelector(`#row${amountOfGuesses}`);
+                let guessedElements = currentRow.querySelectorAll(".guessed")
+                if (guessedElements.length) {
+
+                    let lastGuessElement = guessedElements[guessedElements.length - 1]
+                    lastGuessElement.classList.remove("guessed");
+                    lastGuessElement.textContent = "";
+
+                    guessedWord.pop();
+                    currentLetterPosition--;
                 }
 
-                function deleteLastLetter() {
-                    let currentRow = document.querySelector(`#row${amountOfGuesses}`);
-                    let guessedElements = currentRow.querySelectorAll(".guessed")
-                    if (guessedElements.length) {
-
-                        let lastGuessElement = guessedElements[guessedElements.length - 1]
-                        lastGuessElement.classList.remove("guessed");
-                        lastGuessElement.textContent = "";
-
-                        guessedWord.pop();
-                        currentLetterPosition--;
-                    }
-
-                }
             }
         }
-
     }
-    request.send();
+}
+
+request.send();
