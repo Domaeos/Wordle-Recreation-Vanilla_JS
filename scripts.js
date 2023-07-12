@@ -69,10 +69,11 @@ request.onreadystatechange = function () {
 
             // Handle letter tiles
             if (currentLetterPosition < 6) {
-
+                const currentKey = keyboardMarker.querySelector(`#${event.key}_key`);
                 currentTile.textContent = event.key.toUpperCase();
                 guessedWord.push(event.key);
                 currentTile.classList.add("guessed");
+                currentKey.classList.add("guessed");
                 currentLetterPosition++;
 
             }
@@ -165,6 +166,10 @@ request.onreadystatechange = function () {
                 if (guessedElements.length) {
 
                     let lastGuessElement = guessedElements[guessedElements.length - 1]
+                    let lastKey = keyboardMarker.querySelector(`#${lastGuessElement.textContent.toLowerCase()}_key`);
+
+                    lastKey.classList.remove("guessed");
+                    
                     lastGuessElement.classList.remove("guessed");
                     lastGuessElement.textContent = "";
 
