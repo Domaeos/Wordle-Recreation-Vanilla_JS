@@ -16,6 +16,7 @@ request.onreadystatechange = function () {
         const wordGrid = document.querySelector(".grid");
         keyboardMarker.addEventListener("click", handleClick);
 
+        
         let guessedWord = [];
         let currentLetterPosition = 1;
         let amountOfGuesses = 1;
@@ -87,7 +88,8 @@ request.onreadystatechange = function () {
                         console.log("You win!");
                         const letterBoxes = currentRow.querySelectorAll(".letterBox");
                         letterBoxes.forEach(letterBox => letterBox.classList.add("correct"));
-                        endGame();
+                        endGame(true);
+                        showPopup(true);
 
                     } else if (wordListArray.includes(guessedWord.join(""))) {
 
@@ -140,6 +142,7 @@ request.onreadystatechange = function () {
 
                             // NO MORE GUESSES
                             endGame();
+                            showPopup();
                         }
 
                     } else {
@@ -155,6 +158,39 @@ request.onreadystatechange = function () {
                 }
             }
 
+            function showPopup(didWin = false) {
+                const popup = document.querySelector(".popup");
+
+                popup.classList.add("show");
+
+                const popupHeader = document.querySelector(".popup_header");
+                const innerPopUp = popup.querySelector(".inner_popup");
+                const popupLetterGrid = document.querySelector(".correctWord");
+                const popupGameInfo = document.querySelector(".game_info");
+                const stateCorrectWord = document.querySelector(".word_was");
+
+
+                if (didWin) {
+                    innerPopUp.classList.add("winner");
+                    popupHeader.textContent = "Hooray!";
+                    wordToGuess.split("").map((element, index) => {
+                        let currentLetterBox = popupLetterGrid.querySelector(`#\\3${index} `);
+                        currentLetterBox.textContent = element.toUpperCase();
+                        currentLetterBox.classList.add("correct");
+                        popupGameInfo.textContent = `You guessed the word in ${amountOfGuesses} ${(amountOfGuesses > 1) ? "attempts" : "attempt"}`
+                    })
+
+                } else {
+                    innerPopUp.classList.add("loser");
+                    popupHeader.textContent = "Uh oh!";
+                    stateCorrectWord.textContent = "The word was:"
+                    wordToGuess.split("").map((element, index) => {
+                        let currentLetterBox = popupLetterGrid.querySelector(`#\\3${index} `);
+                        currentLetterBox.textContent = element.toUpperCase();
+                        currentLetterBox.classList.add("correct");
+                        popupGameInfo.textContent = "Better luck next time!";});
+                }
+            }
 
             function endGame() {
                 document.removeEventListener("keyup", keyPressed);
@@ -169,7 +205,7 @@ request.onreadystatechange = function () {
                     let lastKey = keyboardMarker.querySelector(`#${lastGuessElement.textContent.toLowerCase()}_key`);
 
                     lastKey.classList.remove("guessed");
-                    
+
                     lastGuessElement.classList.remove("guessed");
                     lastGuessElement.textContent = "";
 
