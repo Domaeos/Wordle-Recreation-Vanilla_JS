@@ -1,5 +1,4 @@
 const fs = require("fs");
-let arrayToExport;
 
 fs.readFile("backup.txt", "utf8", (err, data) => {
     if (err) {
@@ -16,10 +15,10 @@ fs.readFile("backup.txt", "utf8", (err, data) => {
                 return;
             } else {
                 let thisWord = [];
-                value.split("").map((value, index, array) => {
+                value.split("").some((value, index, array) => {
                     if (thisWord.includes(value)) {
                         thisWord = [];
-                        return;
+                        return true;
                     } else {
                         thisWord.push(value);
                         if (index === array.length - 1) {
@@ -30,15 +29,8 @@ fs.readFile("backup.txt", "utf8", (err, data) => {
                 });
             }
         })
-
-        // No idea why certain letters are making their way in.. to be continued. 
-        // Should ave enough for now to write to new file for Wordle.
-        // Trimming nonsense results..
-        arrayToExport = trimmedWordArray.filter(x => {
-            return x.length === 5;
-        })
-        console.log(arrayToExport);
-        const JSONarray = JSON.stringify(arrayToExport);
-        fs.writeFile('test.txt', JSONarray, { flag: 'a+' }, err => {});
+        console.log(trimmedWordArray);
+        const JSONarray = JSON.stringify(trimmedWordArray);
+        fs.writeFile('stripped_wordlist.txt', JSONarray, { flag: 'a+' }, err => {});
     }
-});
+}); 
