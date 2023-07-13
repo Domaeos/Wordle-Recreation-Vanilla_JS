@@ -25,7 +25,7 @@ body {
 }
 
 .key.large {
-    width: 100px;
+    width: 100px !important;
 }
 
 .keyboard_marker {
@@ -228,7 +228,7 @@ p.game_info {
     display: grid;
     height: 100%;
     width: 100%;
-    align-content: end;
+    align-content: start;
     justify-content: center;
     height: 30px;
     font-size: 15px;

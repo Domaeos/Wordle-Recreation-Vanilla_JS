@@ -35,8 +35,15 @@ request.onreadystatechange = function () {
                         element.classList.add("letterBox");
                     });
                     keys.forEach(element => {
-                        element.className = "";
-                        element.classList.add("key");
+                        if (element.classList.contains("large")) {
+                            element.className = "";
+                            element.classList.add("key");
+                            element.classList.add("large");
+                        } else {
+                            element.className = "";
+                            element.classList.add("key");
+                        }
+                        
                     });
 
                     const winningLetterBoxes = popup.querySelectorAll(".letterBox");
@@ -58,7 +65,8 @@ request.onreadystatechange = function () {
 
             let [guessedWord, currentLetterPosition, amountOfGuesses, wordToGuess] = startGame();
 
-            console.log(wordToGuess);
+            // Show correct word for testing
+            // console.log(wordToGuess);
 
             function handleClick(event) {
                 if (event.target.id.startsWith("Del")) {
