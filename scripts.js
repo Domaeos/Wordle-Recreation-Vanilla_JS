@@ -18,6 +18,9 @@ request.onreadystatechange = function () {
 
         runApp();
 
+        // Added this to save refactoring all of startGame idea again
+        // Could have just merged runApp and startGame into one
+
         function runApp(reload = false) {
             
             function startGame() {
@@ -36,6 +39,11 @@ request.onreadystatechange = function () {
                         element.classList.add("key");
                     });
 
+                    const winningLetterBoxes = popup.querySelectorAll(".letterBox");
+                    winningLetterBoxes.forEach(element => {
+                        element.classList.remove("bounce-top");
+                    })
+
                 }
                 document.addEventListener("keyup", keyPressed);
                 keyboardMarker.addEventListener("click", handleClick);
@@ -50,7 +58,7 @@ request.onreadystatechange = function () {
 
             let [guessedWord, currentLetterPosition, amountOfGuesses, wordToGuess] = startGame();
 
-            // console.log(wordToGuess);
+            console.log(wordToGuess);
 
             function handleClick(event) {
                 if (event.target.id.startsWith("Del")) {
@@ -112,7 +120,7 @@ request.onreadystatechange = function () {
 
                         if (guessedWord.join("") === wordToGuess) {
                             // Word is correct
-                            console.log("You win!");
+
                             const letterBoxes = currentRow.querySelectorAll(".letterBox");
                             letterBoxes.forEach(letterBox => letterBox.classList.add("correct"));
                             endGame(true);
@@ -178,8 +186,8 @@ request.onreadystatechange = function () {
                             window.setTimeout(() => {
                                 currentRow.classList.remove("shake-horizontal");
                             }, 600);
+                            // Not a valid word
 
-                            console.log("Not a valid word");
                         }
 
                     }
@@ -203,6 +211,9 @@ request.onreadystatechange = function () {
                             let currentLetterBox = popupLetterGrid.querySelector(`#\\3${index} `);
                             currentLetterBox.textContent = element.toUpperCase();
                             currentLetterBox.classList.add("correct");
+                            setTimeout(() => {
+                                currentLetterBox.classList.add("bounce-top");
+                            }, 200)
                             popupGameInfo.textContent = `You guessed the word in ${amountOfGuesses} ${(amountOfGuesses > 1) ? "attempts" : "attempt"}`
                         })
 
@@ -214,6 +225,9 @@ request.onreadystatechange = function () {
                             let currentLetterBox = popupLetterGrid.querySelector(`#\\3${index} `);
                             currentLetterBox.textContent = element.toUpperCase();
                             currentLetterBox.classList.add("correct");
+                            setTimeout(() => {
+                                currentLetterBox.classList.add("bounce-top");
+                            }, 200)
                             popupGameInfo.textContent = "Better luck next time!";
                         });
                     }
