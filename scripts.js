@@ -1,15 +1,9 @@
-var request = new XMLHttpRequest();
-
-// Could change this to a simple include .js file with word_list as array
-request.open('GET', '/stripped_wordlist.txt', true);
-
-
-request.onreadystatechange = function () {
-    if (request.readyState === 4) {
-
+async function setupGame() {
+    try {
+        const JSONlist = await fetch("./word_list.txt");
+        const words = await JSONlist.text()
+        const wordListArray = words.split("\n")
         const letterRegex = /^[a-z]||Backspace$/i;
-        const JSONlist = request.responseText;
-        const wordListArray = JSON.parse(JSONlist);
         const keyboardMarker = document.querySelector(".keyboard_marker");
         const wordGrid = document.querySelector(".grid");
         const resetButton = document.querySelector(".reset_button");
@@ -22,7 +16,7 @@ request.onreadystatechange = function () {
         // Could have just merged runApp and startGame into one
 
         function runApp(reload = false) {
-            
+
             function startGame() {
                 // if reload true, reset classes of previous guesses on elements
                 if (reload) {
@@ -43,7 +37,7 @@ request.onreadystatechange = function () {
                             element.className = "";
                             element.classList.add("key");
                         }
-                        
+
                     });
 
                     const winningLetterBoxes = popup.querySelectorAll(".letterBox");
@@ -266,7 +260,9 @@ request.onreadystatechange = function () {
                 }
             }
         }
+    } catch (err) {
+        console.log(err);
     }
 }
 
-request.send();
+setupGame();
